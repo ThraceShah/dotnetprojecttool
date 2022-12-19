@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
+
 namespace dnf;
 
 public class CsProjResolve
@@ -21,6 +22,7 @@ public class CsProjResolve
     {
 
         var lines = File.ReadAllLines(_projPath);
+        yield return this._dirPath;
         if (lines is null)
         {
             yield break;
@@ -28,10 +30,10 @@ public class CsProjResolve
         foreach (var line in lines)
         {
             var l = line.TrimStart();
-            if (l.StartsWith("ProjectReference"))
+            if (l.StartsWith("<ProjectReference"))
             {
                 var p = "Include=\"(.*)\"";
-                string relativePath = Regex.Match(l, p).Result("$1");
+                string relativePath = Regex.Match(l, p).Result("$1")+"/..";
                 var projPath = Path.Combine(this._dirPath, relativePath);
                 projPath = Path.GetFullPath(projPath);
                 yield return projPath;
