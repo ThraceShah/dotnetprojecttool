@@ -56,7 +56,10 @@ internal class Program
                 SetDebugType(args[2], args[1]);
                 break;
             case CmdEnum.SHOWPROJ:
-                ShowProjectInVscode(args[1],args[2]);
+                ShowSlnProjectInVscode(args[1], args[2]);
+                break;
+            case CmdEnum.SHOWREFPROJ:
+                ShowRefProjecInVscode(args[1], args[2]);
                 break;
             default:
                 Console.WriteLine("{0}是未定义的命令", args[0]);
@@ -72,7 +75,10 @@ internal class Program
                 SetDebugType(args[1]);
                 break;
             case CmdEnum.SHOWPROJ:
-                ShowProjectInVscode(args[1]);
+                ShowSlnProjectInVscode(args[1]);
+                break;
+            case CmdEnum.SHOWREFPROJ:
+                ShowRefProjecInVscode(args[1]);
                 break;
             case CmdEnum.NEWCS:
                 NewCSFile(args[1]);
@@ -98,7 +104,7 @@ internal class Program
 
     }
 
-    static void ShowProjectInVscode(string slnPath, string dirPath = "")
+    static void ShowSlnProjectInVscode(string slnPath, string dirPath = "")
     {
         string currentDir = System.Environment.CurrentDirectory + '\\';
         string vscodeSetting = @$"{currentDir}\.vscode\settings.json";
@@ -121,6 +127,31 @@ internal class Program
 
         }
     }
+
+    static void ShowRefProjecInVscode(string projPath, string dirPath = "")
+    {
+        string currentDir = System.Environment.CurrentDirectory + '\\';
+        string vscodeSetting = @$"{currentDir}\.vscode\settings.json";
+        projPath = Path.Combine(currentDir, projPath);
+        var resolve = new CsProjResolve(projPath);
+        var includes = resolve.GetAllProjectPath().ToHashSet();
+        dirPath = Path.Combine(currentDir, dirPath);
+        var dirs = Directory.GetDirectories(dirPath);
+        var list = new List<string>();
+        foreach (var dir in dirs)
+        {
+
+            if (includes.Contains(dir) == false)
+            {
+                Uri url = new Uri(currentDir);
+                Uri relativeUrl = url.MakeRelativeUri(new Uri(dir));
+                string str = $"\"{relativeUrl.OriginalString}\":true,";
+                Console.WriteLine(str);
+            }
+
+        }
+    }
+
 
     static void PrintHelpDoc()
     {

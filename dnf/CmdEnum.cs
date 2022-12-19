@@ -31,7 +31,9 @@ public enum CmdEnum
     [Description("修改当前路径下所有项目的DebugType 格式:debugtpe 配置名称(Debug,Release或自定义,缺省时修改全局) 修改后的值")]
     DEBUGTYPE,
     [Description("修改vscode设置文件,使文件树仅显示存在于指定的.sln文件中的文件夹,格式:showproj sln文件路径 查找的文件夹路径")]
-    SHOWPROJ
+    SHOWPROJ,
+    [Description("修改vscode设置文件,使文件树仅显示存在于指定的.csproj文件中引用项目所在的文件夹,格式:showproj csproJ文件路径 查找的文件夹路径")]
+    SHOWREFPROJ,
 
 }
 public static class CmdEnumEx

@@ -2,3 +2,6 @@
 */obj/*
 */.vs/*
 */solution-explorer/*
+replace.ps1
+regedit.psm1
+regchange.log
